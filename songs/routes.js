@@ -1,73 +1,21 @@
 const { Router } = require('express')
-const Playlist = require('./model')
+const Song = require('./model')
 const auth = require("../auth/middleware")
 
 const router = new Router()
 
-router.get('/playlists', auth, (req, res, next) => {
-  Playlist
-    .findAll()
-    .then(playlists => {
-      res.send({ playlists })
-    })
-    .catch(error => next(error))
-})
+// Only left in the post method. Put can update the song, which is not desired.
 
-router.get('/playlists/:id', auth, (req, res, next) => {
-  Playlist
-    .findByPk(req.params.id, { include: [Song]} )
-    .then(playlist => {
-      if (!playlist) {
-        return res.status(404).send({
-          message: `Playlist does not exist`
-        })
-      }
-      return res.send(playlist)
-    })
-    .catch(error => next(error))
-})
-
-router.post('/playlists', auth, (req, res, next) => {
-  Playlist
+router.post('/songs', auth, (req, res, next) => {
+  Song
     .create(req.body)
-    .then(playlist => {
-      if (!playlist) {
+    .then(song => {
+      if (!song) {
         return res.status(404).send({
-          message: `Playlist does not exist`
+          message: `song does not exist`
         })
       }
-      return res.status(201).send(playlist)
-    })
-    .catch(error => next(error))
-})
-
-// router.put('/playlists/:id', (req, res, next) => {
-//   Playlist
-//     .findByPk(req.params.id)
-//     .then(playlist => {
-//       if (!playlist) {
-//         return res.status(404).send({
-//           message: `Playlist does not exist`
-//         })
-//       }
-//       return playlist.update(req.body).then(playlist => res.send(playlist))
-//     })
-//     .catch(error => next(error))
-// })
-
-router.delete('/playlists/:id', auth, (req, res, next) => {
-  Playlist
-    .findByPk(req.params.id)
-    .then(playlist => {
-      if (!playlist) {
-        return res.status(404).send({
-          message: `Playlist does not exist`
-        })
-      }
-      return playlist.destroy()
-        .then(() => res.send({
-          message: `Playlist was deleted`
-        }))
+      return res.status(201).send(song)
     })
     .catch(error => next(error))
 })

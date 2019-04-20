@@ -1,10 +1,5 @@
-const {
-  Router
-} = require('express')
-const {
-  toJWT
-} = require('./jwt')
-
+const { Router } = require('express')
+const { toJWT } = require('./jwt')
 
 const router = new Router()
 
@@ -52,6 +47,5 @@ router.post('/tokens', (req, res, next) => {
       })
   }
 })
-
 
 module.exports = router
